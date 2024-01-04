@@ -26,3 +26,7 @@ deploy: setup		## deploy everything
 
 destroy: setup		## destroy everything
 	cd deploy && yarn cdk destroy
+
+.PHONY: add-my-pub-key
+add-my-pub-key:		## add ~/.ssh/id_rsa.pub to instance
+	./scripts/add-my-pub-key.sh
