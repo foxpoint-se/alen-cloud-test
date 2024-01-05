@@ -30,3 +30,7 @@ destroy: setup		## destroy everything
 .PHONY: add-my-pub-key
 add-my-pub-key:		## add ~/.ssh/id_rsa.pub to instance
 	./scripts/add-my-pub-key.sh
+
+.PHONY: ssh-me
+ssh-me:		## SSH using your own key (assuming you've added it)
+	./scripts/ssh-me.sh

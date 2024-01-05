@@ -1,5 +1,9 @@
+#!/bin/bash
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/common.sh"
+
 keyName=alen-cloud-test-keypair
-pemFileName=root.pem
 awsRegion=eu-west-1
 
 getKeyPairId() {

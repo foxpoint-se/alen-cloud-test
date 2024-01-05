@@ -1,13 +1,7 @@
-keyName=alen-cloud-test-keypair
-serverName=alen-cloud-test
-pemFileName=root.pem
-userName=ubuntu
-
-getPublicDns() {
-    name=$1
-    filter=Name=tag:Name,Values=$name
-    aws ec2 describe-instances --filters $filter --output text --query 'Reservations[*].Instances[*].PublicDnsName'
-}
+#!/bin/bash
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/common.sh"
 
 addMyPubKey() {
     pemFile=$1
@@ -23,7 +17,6 @@ addMyPubKey() {
 
 echo "Getting public DNS for server with name $serverName"
 publicDns=$(getPublicDns "$serverName")
-
 addMyPubKey $pemFileName $userName $publicDns ~/.ssh/id_rsa.pub
 
 echo "Done!"
