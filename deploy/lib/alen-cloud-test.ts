@@ -42,6 +42,30 @@ export class AlenCloudTest extends cdk.Stack {
       deviceName: "/dev/sda1",
       volume: cdk.aws_ec2.BlockDeviceVolume.ebs(30),
     };
+
+    const hostUserName = "ubuntu";
+    const userData = cdk.aws_ec2.UserData.forLinux();
+    userData.addCommands(
+      "sudo apt update",
+      "sudo apt upgrade -y",
+      "sudo apt install awscli wireguard openresolv net-tools docker.io make -y",
+      "sudo systemctl start docker",
+      "sudo systemctl enable docker",
+      `sudo usermod -a -G docker ${hostUserName}` // Add user to the docker group, so that docker commands don't have to be run as sudo
+    );
+
+    // NVM and Node and stuff
+    userData.addCommands(
+      `echo "Setting up NodeJS Environment"`,
+      `export HOME=/home/${hostUserName}`, // set HOME env var for the install script to work properly
+      `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh | bash`,
+      `. /home/${hostUserName}/.nvm/nvm.sh`, // Dot source the files to ensure that variables are available within the current shell
+      `. /home/${hostUserName}/.profile`,
+      `. /home/${hostUserName}/.bashrc`,
+      `nvm install 18`,
+      `npm install --global yarn`
+    );
+
     const instance = new cdk.aws_ec2.Instance(this, instanceName, {
       vpc,
       role: role,
@@ -57,6 +81,7 @@ export class AlenCloudTest extends cdk.Stack {
         {}
       ),
       keyName: keyPair.keyName,
+      userData,
     });
 
     instance.addToRolePolicy(
