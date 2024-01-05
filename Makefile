@@ -7,23 +7,30 @@ help:
 
 .DEFAULT_GOAL := help
 
+.PHONY: ssh-to-server
 ssh-to-server:		## SSH to server using .pem file
 	./scripts/ssh-to-server.sh
 
+.PHONY: setup-keypair-pem
 setup-keypair-pem:		## get key pair for root ssh access
 	./scripts/setup-keypair-pem.sh
 
+.PHONY: setup-deploy
 setup-deploy:
 	cd deploy && yarn
 
+.PHONY: setup
 setup: setup-deploy		## install and setup everything for development
 
+.PHONY: diff
 diff: setup		## cdk diff
 	cd deploy && yarn cdk diff
 
+.PHONY: deploy
 deploy: setup		## deploy everything
 	cd deploy && yarn cdk deploy
 
+.PHONY: destroy
 destroy: setup		## destroy everything
 	cd deploy && yarn cdk destroy
 
