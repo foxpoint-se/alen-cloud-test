@@ -9,5 +9,5 @@ userName=ubuntu
 getPublicDns() {
     name=$1
     filter=Name=tag:Name,Values=$name
-    aws ec2 describe-instances --filters $filter --output text --query 'Reservations[*].Instances[*].PublicDnsName'
+    aws ec2 describe-instances --filters $filter Name=instance-state-name,Values=running --output text --query 'Reservations[*].Instances[*].PublicDnsName'
 }
