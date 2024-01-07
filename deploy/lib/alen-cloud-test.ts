@@ -98,6 +98,14 @@ export class AlenCloudTest extends cdk.Stack {
       userData,
     });
 
+    const ssmPolicy = cdk.aws_iam.ManagedPolicy.fromManagedPolicyArn(
+      this,
+      "SsmPolicy",
+      "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    );
+
+    instance.role.addManagedPolicy(ssmPolicy);
+
     instance.addToRolePolicy(
       new cdk.aws_iam.PolicyStatement({
         actions: [
